@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WhatsApp Message Task</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f5fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #2196f3;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 20px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+      gap: 10px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      width: 100px;
+    }
+
+    .form-box {
+      background: white;
+      margin: auto;
+      padding: 20px;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    input[type="tel"], .otp-input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .otp-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .otp-container input {
+      width: 40px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2196f3;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 90%;
+      margin: 20px auto;
+      background: white;
+      border-collapse: collapse;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .status {
+      color: green;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-around;
+      background: #f2f2f2;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .footer div {
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">WhatsApp Message Task</div>
+
+  <div class="stats">
+    <div class="stat-box">
+      <div>Online Time</div>
+      <strong id="onlineTime">00:00:00</strong>
+    </div>
+    <div class="stat-box">
+      <div>Today</div>
+      <strong>1845</strong>
+    </div>
+    <div class="stat-box">
+      <div>Total</div>
+      <strong>6020</strong>
+    </div>
+  </div>
+
+  <div class="form-box">
+    <label>Phone Number</label>
+    <input type="tel" id="phone" placeholder="+8801XXXXXXXXX">
+
+    <label>OTP Code</label>
+    <div class="otp-container">
+      <input maxlength="1" class="otp-input">
+      <input maxlength="1" class="otp-input">
+      <input maxlength="1" class="otp-input">
+      <input maxlength="1" class="otp-input">
+      <input maxlength="1" class="otp-input">
+      <input maxlength="1" class="otp-input">
+    </div>
+
+    <br>
+    <button onclick="verifyOTP()">Get Code / Verify</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Duration</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="userTable">
+      <tr>
+        <td>8801736915923</td>
+        <td class="status">online</td>
+        <td>04:10:10</td>
+        <td><button onclick="deleteRow(this)">Delete</button></td>
+      </tr>
+      <tr>
+        <td>8801751838734</td>
+        <td class="status">online</td>
+        <td>05:16:32</td>
+        <td><button onclick="deleteRow(this)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div>🏠<br>Index</div>
+    <div>📣<br>Promotion</div>
+    <div>🎧<br>Customer</div>
+    <div>👤<br>Account</div>
+  </div>
+
+  <script>
+    function verifyOTP() {
+      const phone = document.getElementById("phone").value;
+      const otps = Array.from(document.querySelectorAll(".otp-input")).map(input => input.value).join("");
+
+      if (phone.length < 11 || otps.length < 6) {
+        alert("Please enter valid phone & 6-digit OTP");
+        return;
+      }
+
+      alert("Verified! Welcome, " + phone);
+
+      const table = document.getElementById("userTable");
+      const newRow = table.insertRow();
+      newRow.innerHTML = `
+        <td>${phone}</td>
+        <td class="status">online</td>
+        <td>00:00:01</td>
+        <td><button onclick="deleteRow(this)">Delete</button></td>
+      `;
+    }
+
+    function deleteRow(btn) {
+      const row = btn.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    }
+
+    // Timer updater (fake)
+    let seconds = 0;
+    setInterval(() => {
+      seconds++;
+      const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+      const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+      const s = String(seconds % 60).padStart(2, "0");
+      document.getElementById("onlineTime").textContent = `${h}:${m}:${s}`;
+    }, 1000);
+  </script>
+
+</body>
+</html>
